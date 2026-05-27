@@ -22,6 +22,14 @@ export default function PreTicketPage() {
   const [ticket, setTicket] = useState(null);
   const [cargando, setCargando] = useState(true);
 
+  const [fechaAlquiler, setFechaAlquiler] = useState('');
+  const [cliente, setCliente] = useState('');
+  const [equipo, setEquipo] = useState('');
+  const [obra, setObra] = useState('');
+  const [personaContacto, setPersonaContacto] = useState('');
+  const [telefonoContacto, setTelefonoContacto] = useState('');
+  const [observacionesIA, setObservacionesIA] = useState('');
+
   const [numeroMaquina, setNumeroMaquina] = useState('');
   const [horasMaquina, setHorasMaquina] = useState('');
   const [observacionesAlquiler, setObservacionesAlquiler] = useState('');
@@ -35,10 +43,20 @@ export default function PreTicketPage() {
       const data = await response.json();
 
       if (data.success) {
-        setTicket(data.ticket);
-        setNumeroMaquina(data.ticket.NUMERO_MAQUINA || '');
-        setHorasMaquina(data.ticket.HORAS_MAQUINA || '');
-        setObservacionesAlquiler(data.ticket.OBSERVACIONES_ALQUILER || '');
+        const t = data.ticket;
+        setTicket(t);
+
+        setFechaAlquiler(formatearFecha(t.FECHA_DE_ALQUILER) || '');
+        setCliente(t.CLIENTE || '');
+        setEquipo(t.EQUIPO || '');
+        setObra(t.OBRA || '');
+        setPersonaContacto(t.PERSONA_DE_CONTACTO || '');
+        setTelefonoContacto(t.TELEFONO_DE_CONTACTO || '');
+        setObservacionesIA(t.OBSERVACIONES || '');
+
+        setNumeroMaquina(t.NUMERO_MAQUINA || '');
+        setHorasMaquina(t.HORAS_MAQUINA || '');
+        setObservacionesAlquiler(t.OBSERVACIONES_ALQUILER || '');
       }
 
       setCargando(false);
@@ -60,6 +78,13 @@ export default function PreTicketPage() {
         body: JSON.stringify({
           accion: 'validar_ticket',
           id,
+          FECHA_DE_ALQUILER: fechaAlquiler,
+          CLIENTE: cliente,
+          EQUIPO: equipo,
+          OBRA: obra,
+          PERSONA_DE_CONTACTO: personaContacto,
+          TELEFONO_DE_CONTACTO: telefonoContacto,
+          OBSERVACIONES: observacionesIA,
           NUMERO_MAQUINA: numeroMaquina,
           HORAS_MAQUINA: horasMaquina,
           OBSERVACIONES_ALQUILER: observacionesAlquiler
@@ -111,7 +136,7 @@ export default function PreTicketPage() {
           </h1>
 
           <p className="mt-1 text-sm opacity-70">
-            Salida de maquinaria Monzón · {formatearFecha(ticket.FECHA_DE_ALQUILER)}
+            Salida de maquinaria Monzón
           </p>
         </div>
 
@@ -120,42 +145,91 @@ export default function PreTicketPage() {
         </div>
 
         <div className="grid gap-6 p-6 md:grid-cols-2">
-          <div className="space-y-5">
+          <div className="space-y-4">
 
             <div>
-              <div className="text-xs font-bold uppercase tracking-widest text-gray-400">
+              <label className="mb-1 block text-xs font-bold uppercase tracking-widest text-gray-400">
+                Fecha alquiler
+              </label>
+              <input
+                value={fechaAlquiler}
+                onChange={(e) => setFechaAlquiler(e.target.value)}
+                className="w-full rounded-xl border border-gray-300 bg-white p-3 text-lg font-semibold text-gray-900 outline-none transition focus:border-yellow-500"
+                placeholder="Ej: 05/06/2026"
+              />
+            </div>
+
+            <div>
+              <label className="mb-1 block text-xs font-bold uppercase tracking-widest text-gray-400">
                 Cliente
-              </div>
-              <div className="mt-1 text-xl font-semibold text-gray-900">
-                {ticket.CLIENTE || 'Pendiente'}
-              </div>
+              </label>
+              <input
+                value={cliente}
+                onChange={(e) => setCliente(e.target.value)}
+                className="w-full rounded-xl border border-gray-300 bg-white p-3 text-lg font-semibold text-gray-900 outline-none transition focus:border-yellow-500"
+                placeholder="Cliente"
+              />
             </div>
 
             <div>
-              <div className="text-xs font-bold uppercase tracking-widest text-gray-400">
+              <label className="mb-1 block text-xs font-bold uppercase tracking-widest text-gray-400">
                 Equipo
-              </div>
-              <div className="mt-1 text-xl font-semibold text-gray-900">
-                {ticket.EQUIPO || 'Pendiente'}
-              </div>
+              </label>
+              <input
+                value={equipo}
+                onChange={(e) => setEquipo(e.target.value)}
+                className="w-full rounded-xl border border-gray-300 bg-white p-3 text-lg font-semibold text-gray-900 outline-none transition focus:border-yellow-500"
+                placeholder="Equipo"
+              />
             </div>
 
             <div>
-              <div className="text-xs font-bold uppercase tracking-widest text-gray-400">
+              <label className="mb-1 block text-xs font-bold uppercase tracking-widest text-gray-400">
                 Obra
-              </div>
-              <div className="mt-1 text-xl font-semibold text-gray-900">
-                {ticket.OBRA || 'Pendiente'}
-              </div>
+              </label>
+              <input
+                value={obra}
+                onChange={(e) => setObra(e.target.value)}
+                className="w-full rounded-xl border border-gray-300 bg-white p-3 text-lg font-semibold text-gray-900 outline-none transition focus:border-yellow-500"
+                placeholder="Obra"
+              />
             </div>
 
             <div>
-              <div className="text-xs font-bold uppercase tracking-widest text-gray-400">
+              <label className="mb-1 block text-xs font-bold uppercase tracking-widest text-gray-400">
+                Persona de contacto
+              </label>
+              <input
+                value={personaContacto}
+                onChange={(e) => setPersonaContacto(e.target.value)}
+                className="w-full rounded-xl border border-gray-300 bg-white p-3 text-lg font-semibold text-gray-900 outline-none transition focus:border-yellow-500"
+                placeholder="Persona de contacto"
+              />
+            </div>
+
+            <div>
+              <label className="mb-1 block text-xs font-bold uppercase tracking-widest text-gray-400">
+                Teléfono de contacto
+              </label>
+              <input
+                value={telefonoContacto}
+                onChange={(e) => setTelefonoContacto(e.target.value)}
+                className="w-full rounded-xl border border-gray-300 bg-white p-3 text-lg font-semibold text-gray-900 outline-none transition focus:border-yellow-500"
+                placeholder="Teléfono"
+              />
+            </div>
+
+            <div>
+              <label className="mb-1 block text-xs font-bold uppercase tracking-widest text-gray-400">
                 Observaciones IA
-              </div>
-              <div className="mt-1 rounded-xl bg-yellow-50 p-4 text-gray-800">
-                {ticket.OBSERVACIONES || 'Sin observaciones'}
-              </div>
+              </label>
+              <textarea
+                value={observacionesIA}
+                onChange={(e) => setObservacionesIA(e.target.value)}
+                rows={4}
+                className="w-full rounded-xl border border-gray-300 bg-yellow-50 p-3 text-gray-800 outline-none transition focus:border-yellow-500"
+                placeholder="Observaciones detectadas por IA"
+              />
             </div>
           </div>
 
@@ -223,9 +297,9 @@ export default function PreTicketPage() {
             Mensaje original WhatsApp
           </div>
 
-	<div className="mt-3 rounded-2xl border border-gray-200 bg-white p-4 text-sm leading-relaxed text-gray-700">
-  		{ticket.MENSAJE_ORIGINAL || 'Sin mensaje original guardado'}
-	</div>
+          <div className="mt-3 rounded-2xl border border-gray-200 bg-white p-4 text-sm leading-relaxed text-gray-700">
+            {ticket.MENSAJE_ORIGINAL || 'Sin mensaje original guardado'}
+          </div>
         </div>
       </div>
     </main>
