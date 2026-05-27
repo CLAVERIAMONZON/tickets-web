@@ -14,11 +14,12 @@ function formatearFecha(valor) {
 
   return fecha.toLocaleDateString('es-ES');
 }
+
 function barraEstado(estado) {
   if (estado === 'PRE-TICKET') return '⬜⬜⬜⬜';
   if (estado === 'PENDIENTE_ASIGNAR_MAQUINA') return '🟥🟥⬜⬜';
   if (estado === 'MAQUINA_ASIGNADA') return '🟨🟨🟨⬜';
-  if (estado === 'CARGADO -> GENERAR ALBARAN') return '🟩🟩🟩🟩';
+  if (estado === 'CARGADO') return '🟩🟩🟩🟩';
   return '⬜⬜⬜⬜';
 }
 
@@ -29,6 +30,7 @@ function tituloTicket(ticket) {
 
   return `${ticket.ID.replace('PT-', 'TC-')}`;
 }
+
 export default function PreTicketPage() {
   const params = useParams();
   const id = params.id;
@@ -42,10 +44,11 @@ export default function PreTicketPage() {
   const [obra, setObra] = useState('');
   const [personaContacto, setPersonaContacto] = useState('');
   const [telefonoContacto, setTelefonoContacto] = useState('');
-  const [observacionesIA, setObservacionesIA] = useState('');
+  const [observaciones, setObservaciones] = useState('');
 
   const [numeroMaquina, setNumeroMaquina] = useState('');
   const [horasMaquina, setHorasMaquina] = useState('');
+  const [funcionamientoComprobado, setFuncionamientoComprobado] = useState(false);
   const [observacionesAlquiler, setObservacionesAlquiler] = useState('');
 
   const [guardando, setGuardando] = useState(false);
@@ -66,10 +69,11 @@ export default function PreTicketPage() {
         setObra(t.OBRA || '');
         setPersonaContacto(t.PERSONA_DE_CONTACTO || '');
         setTelefonoContacto(t.TELEFONO_DE_CONTACTO || '');
-        setObservacionesIA(t.OBSERVACIONES || '');
+        setObservaciones(t.OBSERVACIONES || '');
 
         setNumeroMaquina(t.NUMERO_MAQUINA || '');
         setHorasMaquina(t.HORAS_MAQUINA || '');
+        setFuncionamientoComprobado(t.FUNCIONAMIENTO_COMPROBADO === 'SI');
         setObservacionesAlquiler(t.OBSERVACIONES_ALQUILER || '');
       }
 
@@ -79,7 +83,7 @@ export default function PreTicketPage() {
     cargarTicket();
   }, [id]);
 
-  async function validarTicket() {
+  async function actualizarTicket() {
     setGuardando(true);
     setMensaje('');
 
@@ -98,9 +102,10 @@ export default function PreTicketPage() {
           OBRA: obra,
           PERSONA_DE_CONTACTO: personaContacto,
           TELEFONO_DE_CONTACTO: telefonoContacto,
-          OBSERVACIONES: observacionesIA,
+          OBSERVACIONES: observaciones,
           NUMERO_MAQUINA: numeroMaquina,
           HORAS_MAQUINA: horasMaquina,
+          FUNCIONAMIENTO_COMPROBADO: funcionamientoComprobado,
           OBSERVACIONES_ALQUILER: observacionesAlquiler
         })
       });
@@ -108,9 +113,9 @@ export default function PreTicketPage() {
       const data = await response.json();
 
       if (data.success) {
-        setMensaje('Ticket validado y guardado correctamente');
+        setMensaje('Ticket actualizado correctamente');
       } else {
-        setMensaje('Error al guardar ticket');
+        setMensaje('Error al actualizar ticket');
       }
     } catch (err) {
       console.log(err);
@@ -155,12 +160,23 @@ export default function PreTicketPage() {
         </div>
 
         <div className="border-b bg-white px-6 py-4 text-3xl tracking-tight">
-  		{barraEstado(ticket.ESTADO)}
-	</div>
+          {barraEstado(ticket.ESTADO)}
+        </div>
 
         <div className="grid gap-6 p-6 md:grid-cols-2">
           <div className="space-y-4">
 
+            <div>
+              <label className="mb-1 block text-xs font-bold uppercase tracking-widest text-gray-400">
+                Fecha alquiler
+              </label>
+              <input
+                value={fechaAlquiler}
+                onChange={(e) => setFechaAlquiler(e.target.value)}
+                className="w-full rounded-xl border border-gray-300 bg-white p-3 text-lg font-semibold text-gray-900 outline-none transition focus:border-yellow-500"
+                placeholder="Ej: 05/06/2026"
+              />
+            </div>
 
             <div>
               <label className="mb-1 block text-xs font-bold uppercase tracking-widest text-gray-400">
@@ -224,16 +240,17 @@ export default function PreTicketPage() {
 
             <div>
               <label className="mb-1 block text-xs font-bold uppercase tracking-widest text-gray-400">
-                Observaciones IA
+                Observaciones
               </label>
               <textarea
-                value={observacionesIA}
-                onChange={(e) => setObservacionesIA(e.target.value)}
+                value={observaciones}
+                onChange={(e) => setObservaciones(e.target.value)}
                 rows={4}
-                className="w-full rounded-xl border border-gray-300 bg-yellow-50 p-3 text-gray-800 outline-none transition focus:border-yellow-500"
-                placeholder="Observaciones detectadas por IA"
+                className="w-full rounded-xl border border-gray-300 bg-white p-3 text-gray-800 outline-none transition focus:border-yellow-500"
+                placeholder="Observaciones del ticket"
               />
             </div>
+
           </div>
 
           <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
@@ -242,6 +259,7 @@ export default function PreTicketPage() {
             </h2>
 
             <div className="mt-5 space-y-4">
+
               <div>
                 <label className="mb-1 block text-sm font-medium text-gray-700">
                   Número de máquina
@@ -266,6 +284,16 @@ export default function PreTicketPage() {
                 />
               </div>
 
+              <label className="flex items-center gap-3 rounded-xl border border-gray-300 bg-white p-3 text-sm font-bold text-gray-700">
+                <input
+                  type="checkbox"
+                  checked={funcionamientoComprobado}
+                  onChange={(e) => setFuncionamientoComprobado(e.target.checked)}
+                  className="h-5 w-5"
+                />
+                Funcionamiento básico comprobado
+              </label>
+
               <div>
                 <label className="mb-1 block text-sm font-medium text-gray-700">
                   Observaciones alquiler
@@ -280,10 +308,10 @@ export default function PreTicketPage() {
               </div>
 
               <button
-                onClick={validarTicket}
+                onClick={actualizarTicket}
                 className="w-full rounded-xl bg-[#ffd100] py-3 text-xl font-black tracking-wide text-black transition hover:bg-yellow-400"
               >
-                {guardando ? 'GUARDANDO...' : 'VALIDAR TICKET'}
+                {guardando ? 'GUARDANDO...' : 'ACTUALIZAR TICKET'}
               </button>
 
               {mensaje && (
@@ -291,6 +319,7 @@ export default function PreTicketPage() {
                   {mensaje}
                 </p>
               )}
+
             </div>
           </div>
         </div>
@@ -304,6 +333,7 @@ export default function PreTicketPage() {
             {ticket.MENSAJE_ORIGINAL || 'Sin mensaje original guardado'}
           </div>
         </div>
+
       </div>
     </main>
   );
