@@ -14,7 +14,21 @@ function formatearFecha(valor) {
 
   return fecha.toLocaleDateString('es-ES');
 }
+function barraEstado(estado) {
+  if (estado === 'PRE-TICKET') return '⬜⬜⬜⬜';
+  if (estado === 'PENDIENTE_ASIGNAR_MAQUINA') return '🟥🟥⬜⬜';
+  if (estado === 'MAQUINA_ASIGNADA') return '🟨🟨🟨⬜';
+  if (estado === 'CARGADO -> GENERAR ALBARAN') return '🟩🟩🟩🟩';
+  return '⬜⬜⬜⬜';
+}
 
+function tituloTicket(ticket) {
+  if (ticket.ESTADO === 'PRE-TICKET') {
+    return `PRE-TICKET · ${ticket.ID}`;
+  }
+
+  return `${ticket.ID.replace('PT-', 'TC-')}`;
+}
 export default function PreTicketPage() {
   const params = useParams();
   const id = params.id;
@@ -132,7 +146,7 @@ export default function PreTicketPage() {
 
         <div className="bg-[#ffd100] px-6 py-5 text-black">
           <h1 className="text-3xl font-black tracking-tight">
-            PRE-TICKET · {ticket.ID}
+            {tituloTicket(ticket)}
           </h1>
 
           <p className="mt-1 text-sm opacity-70">
@@ -141,23 +155,12 @@ export default function PreTicketPage() {
         </div>
 
         <div className="border-b bg-white px-6 py-4 text-3xl tracking-tight">
-          ⬜⬜⬜⬜⬜
-        </div>
+  		{barraEstado(ticket.ESTADO)}
+	</div>
 
         <div className="grid gap-6 p-6 md:grid-cols-2">
           <div className="space-y-4">
 
-            <div>
-              <label className="mb-1 block text-xs font-bold uppercase tracking-widest text-gray-400">
-                Fecha alquiler
-              </label>
-              <input
-                value={fechaAlquiler}
-                onChange={(e) => setFechaAlquiler(e.target.value)}
-                className="w-full rounded-xl border border-gray-300 bg-white p-3 text-lg font-semibold text-gray-900 outline-none transition focus:border-yellow-500"
-                placeholder="Ej: 05/06/2026"
-              />
-            </div>
 
             <div>
               <label className="mb-1 block text-xs font-bold uppercase tracking-widest text-gray-400">
