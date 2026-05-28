@@ -158,25 +158,14 @@ export default function PreTicketPage() {
             Salida de maquinaria Monzón
           </p>
         </div>
-
-        <div className="border-b bg-white px-6 py-4 text-3xl tracking-tight">
+        <div className="border-b bg-white px-6 py-4 text-3xl tracking-[0.35em]">
           {barraEstado(ticket.ESTADO)}
         </div>
 
         <div className="grid gap-6 p-6 md:grid-cols-2">
           <div className="space-y-4">
 
-            <div>
-              <label className="mb-1 block text-xs font-bold uppercase tracking-widest text-gray-400">
-                Fecha alquiler
-              </label>
-              <input
-                value={fechaAlquiler}
-                onChange={(e) => setFechaAlquiler(e.target.value)}
-                className="w-full rounded-xl border border-gray-300 bg-white p-3 text-lg font-semibold text-gray-900 outline-none transition focus:border-yellow-500"
-                placeholder="Ej: 05/06/2026"
-              />
-            </div>
+
 
             <div>
               <label className="mb-1 block text-xs font-bold uppercase tracking-widest text-gray-400">
@@ -253,7 +242,8 @@ export default function PreTicketPage() {
 
           </div>
 
-          <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
+          {ticket.ESTADO !== 'PRE-TICKET' && (
+  		<div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
             <h2 className="text-xl font-bold text-gray-900">
               Validación operativa
             </h2>
@@ -321,8 +311,9 @@ export default function PreTicketPage() {
               )}
 
             </div>
-          </div>
-        </div>
+	</div>
+	)}
+	</div>
 
         <div className="border-t bg-gray-50 p-6">
           <div className="text-xs font-bold uppercase tracking-widest text-gray-400">
