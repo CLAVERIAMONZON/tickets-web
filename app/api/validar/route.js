@@ -3,6 +3,7 @@ const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyaJ-whtPA3Y7
 const BOT_WEBHOOK_URL = 'https://presuming-feminist-blouse.ngrok-free.dev/notificar-ticket';
 
 export async function POST(request) {
+
   const body = await request.json();
 
   const response = await fetch(GOOGLE_SCRIPT_URL, {
@@ -14,9 +15,12 @@ export async function POST(request) {
   });
 
   const text = await response.text();
+
   const googleData = JSON.parse(text);
 
+  // AVISAR AL BOT WHATSAPP
   if (googleData.success) {
+
     await fetch(BOT_WEBHOOK_URL, {
       method: 'POST',
       headers: {
@@ -32,7 +36,9 @@ export async function POST(request) {
         HORAS_MAQUINA: body.HORAS_MAQUINA
       })
     });
+
   }
 
   return Response.json(googleData);
+
 }
