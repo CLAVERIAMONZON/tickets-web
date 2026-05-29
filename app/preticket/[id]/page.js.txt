@@ -297,7 +297,25 @@ export default function PreTicketPage() {
                 />
               </div>
 
-              
+              {ticket.ESTADO === 'MAQUINA_ASIGNADA' && (
+  <div className="rounded-2xl border border-gray-300 bg-white p-4">
+    <h3 className="mb-3 text-lg font-black text-gray-900">
+      Fotografías de salida
+    </h3>
+
+    <input
+      type="file"
+      accept="image/*"
+      capture="environment"
+      multiple
+      className="w-full rounded-xl border border-gray-300 bg-white p-3"
+    />
+
+    <p className="mt-2 text-sm text-gray-500">
+      Haz las fotos de la máquina antes de confirmar la salida.
+    </p>
+  </div>
+)}
 
               {mensaje && (
                 <p className="text-center text-sm font-bold text-green-700">
@@ -309,11 +327,18 @@ export default function PreTicketPage() {
 	</div>
 	)}
 	</div>
+        
 	<button
                 onClick={actualizarTicket}
                 className="w-full rounded-xl bg-[#ffd100] py-3 text-xl font-black tracking-wide text-black transition hover:bg-yellow-400"
               >
-                {guardando ? 'GUARDANDO...' : 'ACTUALIZAR TICKET'}
+                {
+  		guardando
+    		? 'GUARDANDO...'
+    		: ticket.ESTADO === 'MAQUINA_ASIGNADA'
+      		? 'CONFIRMAR SALIDA'
+      		: 'ACTUALIZAR TICKET'
+		}
               </button>
         <div className="border-t bg-gray-50 p-6">
           <div className="text-xs font-bold uppercase tracking-widest text-gray-400">
