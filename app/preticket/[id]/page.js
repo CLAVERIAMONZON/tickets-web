@@ -297,12 +297,7 @@ export default function PreTicketPage() {
                 />
               </div>
 
-              <button
-                onClick={actualizarTicket}
-                className="w-full rounded-xl bg-[#ffd100] py-3 text-xl font-black tracking-wide text-black transition hover:bg-yellow-400"
-              >
-                {guardando ? 'GUARDANDO...' : 'ACTUALIZAR TICKET'}
-              </button>
+              
 
               {mensaje && (
                 <p className="text-center text-sm font-bold text-green-700">
@@ -314,7 +309,12 @@ export default function PreTicketPage() {
 	</div>
 	)}
 	</div>
-
+	<button
+                onClick={actualizarTicket}
+                className="w-full rounded-xl bg-[#ffd100] py-3 text-xl font-black tracking-wide text-black transition hover:bg-yellow-400"
+              >
+                {guardando ? 'GUARDANDO...' : 'ACTUALIZAR TICKET'}
+              </button>
         <div className="border-t bg-gray-50 p-6">
           <div className="text-xs font-bold uppercase tracking-widest text-gray-400">
             Mensaje original WhatsApp
