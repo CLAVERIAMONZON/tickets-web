@@ -333,11 +333,15 @@ export default function PreTicketPage() {
                 className="w-full rounded-xl bg-[#ffd100] py-3 text-xl font-black tracking-wide text-black transition hover:bg-yellow-400"
               >
                 {
-  		guardando
+  		  guardando
     		? 'GUARDANDO...'
-    		: ticket.ESTADO === 'MAQUINA_ASIGNADA'
-      		? 'CONFIRMAR SALIDA'
-      		: 'ACTUALIZAR TICKET'
+    		: ticket.ESTADO === 'PRE-TICKET'
+      		? 'VALIDAR PRE-TICKET'
+      		: ticket.ESTADO === 'MAQUINA_ASIGNADA'
+        		? 'CONFIRMAR SALIDA'
+        		: ticket.ESTADO === 'CARGADO'
+          		? 'GENERAR ALBARÁN'
+          		: 'ACTUALIZAR TICKET'
 		}
               </button>
         <div className="border-t bg-gray-50 p-6">
