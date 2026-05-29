@@ -50,6 +50,7 @@ export default function PreTicketPage() {
   const [horasMaquina, setHorasMaquina] = useState('');
   const [funcionamientoComprobado, setFuncionamientoComprobado] = useState(false);
   const [observacionesAlquiler, setObservacionesAlquiler] = useState('');
+  const [fotosSalida, setFotosSalida] = useState([]);
 
   const [guardando, setGuardando] = useState(false);
   const [mensaje, setMensaje] = useState('');
@@ -303,14 +304,20 @@ export default function PreTicketPage() {
       Fotografías de salida
     </h3>
 
+
     <input
       type="file"
       accept="image/*"
       capture="environment"
       multiple
+      onChange={(e) => setFotosSalida(Array.from(e.target.files))}
       className="w-full rounded-xl border border-gray-300 bg-white p-3"
     />
-
+    {fotosSalida.length > 0 && (
+      <p className="mt-2 text-sm font-bold text-green-700">
+        {fotosSalida.length} foto(s) seleccionada(s)
+      </p>
+    )}
     <p className="mt-2 text-sm text-gray-500">
       Haz las fotos de la máquina antes de confirmar la salida.
     </p>
