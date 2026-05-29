@@ -89,6 +89,27 @@ export default function PreTicketPage() {
     setMensaje('');
 
     try {
+          let fotosBase64 = [];
+
+    if (ticket.ESTADO === 'MAQUINA_ASIGNADA') {
+      fotosBase64 = await Promise.all(
+        fotosSalida.map((foto) => {
+          return new Promise((resolve) => {
+            const reader = new FileReader();
+
+            reader.onload = () => {
+              resolve({
+                nombre: foto.name,
+                tipo: foto.type,
+                contenido: reader.result.split(',')[1]
+              });
+            };
+
+            reader.readAsDataURL(foto);
+          });
+        })
+      );
+    }
       const response = await fetch('/api/validar', {
         method: 'POST',
         headers: {
@@ -107,7 +128,8 @@ export default function PreTicketPage() {
           NUMERO_MAQUINA: numeroMaquina,
           HORAS_MAQUINA: horasMaquina,
           FUNCIONAMIENTO_COMPROBADO: funcionamientoComprobado,
-          OBSERVACIONES_ALQUILER: observacionesAlquiler
+          OBSERVACIONES_ALQUILER: observacionesAlquiler,
+          FOTOS_SALIDA: fotosBase64
         })
       });
 
@@ -310,7 +332,11 @@ export default function PreTicketPage() {
       accept="image/*"
       capture="environment"
       multiple
-      onChange={(e) => setFotosSalida(Array.from(e.target.files))}
+
+      onChange={(e) => {
+        const nuevasFotos = Array.from(e.target.files);
+        setFotosSalida((actuales) => [...actuales, ...nuevasFotos]);
+      }}
       className="w-full rounded-xl border border-gray-300 bg-white p-3"
     />
     {fotosSalida.length > 0 && (
