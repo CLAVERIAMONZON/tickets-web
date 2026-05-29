@@ -187,12 +187,20 @@ export default function PreTicketPage() {
 
         <div className="grid gap-6 p-6 md:grid-cols-2">
           <div className="space-y-4">
-
-
-
+           <div>
+  	<label className="mb-1 block text-xs font-bold uppercase tracking-widest text-gray-400">
+    	Fecha alquiler
+  	</label>
+  	<input
+    	value={fechaAlquiler}
+    	onChange={(e) => setFechaAlquiler(e.target.value)}
+    	className="w-full rounded-xl border border-gray-300 bg-white p-3 text-lg font-semibold text-gray-900 outline-none transition focus:border-yellow-500"
+    	placeholder="Ej: 05/06/2026"
+  	/>
+	</div>
             <div>
               <label className="mb-1 block text-xs font-bold uppercase tracking-widest text-gray-400">
-                Cliente
+		Cliente
               </label>
               <input
                 value={cliente}

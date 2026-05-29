@@ -18,9 +18,9 @@ export async function POST(request) {
 
   const googleData = JSON.parse(text);
 
-  // AVISAR AL BOT WHATSAPP
-  if (googleData.success) {
-
+// AVISAR AL BOT WHATSAPP, PERO SIN ROMPER EL GUARDADO
+if (googleData.success) {
+  try {
     await fetch(BOT_WEBHOOK_URL, {
       method: 'POST',
       headers: {
@@ -36,8 +36,10 @@ export async function POST(request) {
         HORAS_MAQUINA: body.HORAS_MAQUINA
       })
     });
-
+  } catch (error) {
+    console.log('No se pudo avisar al bot:', error);
   }
+}
 
   return Response.json(googleData);
 
