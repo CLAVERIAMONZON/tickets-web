@@ -136,13 +136,13 @@ export default function PreTicketPage() {
       const data = await response.json();
 
       if (data.success) {
-        setMensaje('Ticket actualizado correctamente');
-      } else {
-        setMensaje('Error al actualizar ticket');
-      }
+  	setMensaje('Ticket actualizado correctamente');
+	} else {
+  	setMensaje('Error: ' + (data.detalle || data.error || 'No identificado'));
+     }setMensaje('Error de conexión');
     } catch (err) {
       console.log(err);
-      setMensaje('Error de conexión');
+      setMensaje('Error de conexión: ' + err.message);
     }
 
     setGuardando(false);
