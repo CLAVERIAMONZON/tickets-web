@@ -135,11 +135,18 @@ export default function PreTicketPage() {
 
       const data = await response.json();
 
-      if (data.success) {
-  	setMensaje('Ticket actualizado correctamente');
-	} else {
-  	setMensaje('Error: ' + (data.detalle || data.error || 'No identificado'));
-     }setMensaje('Error de conexión');
+
+if (!response.ok) {
+  setMensaje('Error API: ' + (data.error || data.detalle || response.status));
+  setGuardando(false);
+  return;
+}
+
+if (data.success) {
+  setMensaje('Ticket actualizado correctamente');
+} else {
+  setMensaje('Error: ' + (data.detalle || data.error || 'No identificado'));
+}
     } catch (err) {
       console.log(err);
       setMensaje('Error de conexión: ' + err.message);
