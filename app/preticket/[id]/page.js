@@ -346,7 +346,7 @@ if (data.success) {
       type="file"
       accept="image/*"
       capture="environment"
-      multiple
+
 
       onChange={(e) => {
         const nuevasFotos = Array.from(e.target.files);
