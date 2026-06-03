@@ -46,14 +46,26 @@ export async function POST(request) {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            id: body.id,
-            estado: googleData.estado,
-            CLIENTE: body.CLIENTE,
-            EQUIPO: body.EQUIPO,
-            OBRA: body.OBRA,
-            NUMERO_MAQUINA: body.NUMERO_MAQUINA,
-            HORAS_MAQUINA: body.HORAS_MAQUINA
-          })
+  		id: body.id,
+  		estado: googleData.estado,
+
+  		CLIENTE: body.CLIENTE,
+  		EQUIPO: body.EQUIPO,
+  		OBRA: body.OBRA,
+
+  		FECHA_DE_ALQUILER: body.FECHA_DE_ALQUILER,
+
+  		NUMERO_MAQUINA: body.NUMERO_MAQUINA,
+  		HORAS_MAQUINA: body.HORAS_MAQUINA,
+
+  		tipoAviso: googleData.tipoAviso,
+
+  		fechaAnterior: googleData.fechaAnterior,
+  		fechaNueva: googleData.fechaNueva,
+
+  		maquinaAnterior: googleData.maquinaAnterior,
+  		maquinaNueva: googleData.maquinaNueva
+		})
         });
       } catch (error) {
         console.log('No se pudo avisar al bot:', error);

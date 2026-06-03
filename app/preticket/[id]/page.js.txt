@@ -155,6 +155,47 @@ if (data.success) {
     setGuardando(false);
   }
 
+async function cancelarCarga() {
+  setGuardando(true);
+  setMensaje('');
+
+  try {
+    const response = await fetch('/api/validar', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        accion: 'cancelar_ticket',
+        id,
+        FECHA_DE_ALQUILER: fechaAlquiler,
+        CLIENTE: cliente,
+        EQUIPO: equipo,
+        OBRA: obra,
+        PERSONA_DE_CONTACTO: personaContacto,
+        TELEFONO_DE_CONTACTO: telefonoContacto
+      })
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      setMensaje('Carga cancelada correctamente');
+    } else {
+      setMensaje(data.error || 'Error al cancelar');
+    }
+
+  } catch (err) {
+    setMensaje('Error de conexión');
+  }
+
+  setGuardando(false);
+}
+
+
+
+
+
   if (cargando) {
     return (
       <main className="min-h-screen bg-[#f4f4f4] p-4">
@@ -376,22 +417,29 @@ if (data.success) {
 	)}
 	</div>
         
-	<button
-                onClick={actualizarTicket}
-                className="w-full rounded-xl bg-[#ffd100] py-3 text-xl font-black tracking-wide text-black transition hover:bg-yellow-400"
-              >
-                {
-  		  guardando
-    		? 'GUARDANDO...'
-    		: ticket.ESTADO === 'PRE-TICKET'
-      		? 'VALIDAR PRE-TICKET'
-      		: ticket.ESTADO === 'MAQUINA_ASIGNADA'
-        		? 'CONFIRMAR SALIDA'
-        		: ticket.ESTADO === 'CARGADO'
-          		? 'GENERAR ALBARÁN'
-          		: 'ACTUALIZAR TICKET'
-		}
-              </button>
+<button
+  onClick={actualizarTicket}
+  className="w-full rounded-xl bg-[#ffd100] py-3 text-xl font-black tracking-wide text-black transition hover:bg-yellow-400"
+>
+  {
+    guardando
+      ? 'GUARDANDO...'
+      : ticket.ESTADO === 'PRE-TICKET'
+        ? 'VALIDAR PRE-TICKET'
+        : ticket.ESTADO === 'MAQUINA_ASIGNADA'
+          ? 'CONFIRMAR SALIDA'
+          : ticket.ESTADO === 'CARGADO'
+            ? 'GENERAR ALBARÁN'
+            : 'ACTUALIZAR TICKET'
+  }
+</button>
+
+<button
+  onClick={cancelarCarga}
+  className="mt-3 w-full rounded-xl bg-red-600 py-3 text-lg font-black tracking-wide text-white transition hover:bg-red-700"
+>
+  CANCELAR CARGA
+</button>
         <div className="border-t bg-gray-50 p-6">
           <div className="text-xs font-bold uppercase tracking-widest text-gray-400">
             Mensaje original WhatsApp
