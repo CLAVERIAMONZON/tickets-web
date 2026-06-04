@@ -418,7 +418,7 @@ async function cancelarCarga() {
 	</div>
 	)}
 	</div>
-<label className="mt-4 flex items-center gap-3 rounded-xl border border-gray-300 bg-gray-50 p-3 text-sm font-bold text-gray-700">
+<label className="mx-6 mt-2 mb-4 flex items-center gap-2 text-sm font-semibold text-gray-700">
   <input
     type="checkbox"
     checked={modificarSalida}
@@ -450,7 +450,7 @@ async function cancelarCarga() {
 >
   CANCELAR CARGA
 </button>
-        <div className="border-t bg-gray-50 p-6">
+        <div className="mt-6 border-t bg-gray-50 p-6">
           <div className="text-xs font-bold uppercase tracking-widest text-gray-400">
             Mensaje original WhatsApp
           </div>

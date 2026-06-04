@@ -14,7 +14,6 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Salida de maquinaria Monzón",
-  description: "Orden de salida de maquinaria",
 };
 
 export default function RootLayout({
