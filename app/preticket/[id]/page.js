@@ -51,7 +51,7 @@ export default function PreTicketPage() {
   const [funcionamientoComprobado, setFuncionamientoComprobado] = useState(false);
   const [observacionesAlquiler, setObservacionesAlquiler] = useState('');
   const [fotosSalida, setFotosSalida] = useState([]);
-
+  const [modificarSalida, setModificarSalida] = useState(false);
   const [guardando, setGuardando] = useState(false);
   const [mensaje, setMensaje] = useState('');
 
@@ -118,6 +118,7 @@ export default function PreTicketPage() {
         body: JSON.stringify({
           accion: 'validar_ticket',
           id,
+	  MODIFICAR_SALIDA: modificarSalida,
           FECHA_DE_ALQUILER: fechaAlquiler,
           CLIENTE: cliente,
           EQUIPO: equipo,
@@ -387,6 +388,7 @@ async function cancelarCarga() {
       type="file"
       accept="image/*"
       capture="environment"
+      multiple
 
 
       onChange={(e) => {
@@ -416,7 +418,15 @@ async function cancelarCarga() {
 	</div>
 	)}
 	</div>
-        
+<label className="mt-4 flex items-center gap-3 rounded-xl border border-gray-300 bg-gray-50 p-3 text-sm font-bold text-gray-700">
+  <input
+    type="checkbox"
+    checked={modificarSalida}
+    onChange={(e) => setModificarSalida(e.target.checked)}
+    className="h-5 w-5"
+  />
+  Modificar salida
+</label>        
 <button
   onClick={actualizarTicket}
   className="w-full rounded-xl bg-[#ffd100] py-3 text-xl font-black tracking-wide text-black transition hover:bg-yellow-400"
@@ -436,7 +446,7 @@ async function cancelarCarga() {
 
 <button
   onClick={cancelarCarga}
-  className="mt-3 w-full rounded-xl bg-red-600 py-3 text-lg font-black tracking-wide text-white transition hover:bg-red-700"
+  className="mt-3 w-full rounded-xl border border-red-300 bg-white py-3 text-lg font-black tracking-wide text-red-700 transition hover:bg-red-50"
 >
   CANCELAR CARGA
 </button>
