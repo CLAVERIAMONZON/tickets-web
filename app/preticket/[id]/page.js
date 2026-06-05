@@ -517,15 +517,16 @@ async function cancelarCarga() {
   className="w-full rounded-xl bg-[#ffd100] py-3 text-xl font-black tracking-wide text-black transition hover:bg-yellow-400"
 >
   {
-    guardando
-      ? 'GUARDANDO...'
-      : ticket.ESTADO === 'PRE-TICKET'
-        ? 'VALIDAR PRE-TICKET'
-        : ticket.ESTADO === 'MAQUINA_ASIGNADA'
-          ? 'CONFIRMAR SALIDA'
-          : ticket.ESTADO === 'CARGADO'
-  	  ? 'FINALIZAR'
-  }
+  guardando
+    ? 'GUARDANDO...'
+    : ticket.ESTADO === 'PRE-TICKET'
+      ? 'VALIDAR PRE-TICKET'
+      : ticket.ESTADO === 'MAQUINA_ASIGNADA'
+        ? 'CONFIRMAR SALIDA'
+        : ticket.ESTADO === 'CARGADO'
+          ? 'FINALIZAR'
+          : 'ACTUALIZAR TICKET'
+}
 </button>
 
 <button
