@@ -89,27 +89,49 @@ export default function PreTicketPage() {
     setMensaje('');
 
     try {
-          let fotosBase64 = [];
+if (ticket.ESTADO === 'MAQUINA_ASIGNADA' && fotosSalida.length > 0) {
+  for (let i = 0; i < fotosSalida.length; i++) {
+    const foto = fotosSalida[i];
 
-    if (ticket.ESTADO === 'MAQUINA_ASIGNADA') {
-      fotosBase64 = await Promise.all(
-        fotosSalida.map((foto) => {
-          return new Promise((resolve) => {
-            const reader = new FileReader();
+    const fotoBase64 = await new Promise((resolve) => {
+      const reader = new FileReader();
 
-            reader.onload = () => {
-              resolve({
-                nombre: foto.name,
-                tipo: foto.type,
-                contenido: reader.result.split(',')[1]
-              });
-            };
+      reader.onload = () => {
+        resolve({
+          nombre: foto.name,
+          tipo: foto.type,
+          contenido: reader.result.split(',')[1]
+        });
+      };
 
-            reader.readAsDataURL(foto);
-          });
-        })
-      );
+      reader.readAsDataURL(foto);
+    });
+
+    setMensaje(`Subiendo foto ${i + 1} de ${fotosSalida.length}...`);
+
+    const subida = await fetch('/api/subir-foto', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        accion: 'subir_foto_salida',
+        id,
+        NUMERO_MAQUINA: numeroMaquina,
+        FOTO: fotoBase64,
+        NUMERO_FOTO: i + 1
+      })
+    });
+
+    const subidaData = await subida.json();
+
+    if (!subidaData.success) {
+      setMensaje('Error subiendo foto ' + (i + 1));
+      setGuardando(false);
+      return;
     }
+  }
+}
       const response = await fetch('/api/validar', {
         method: 'POST',
         headers: {
@@ -130,7 +152,8 @@ export default function PreTicketPage() {
           HORAS_MAQUINA: horasMaquina,
           FUNCIONAMIENTO_COMPROBADO: funcionamientoComprobado,
           OBSERVACIONES_ALQUILER: observacionesAlquiler,
-          FOTOS_SALIDA: fotosBase64
+          CONFIRMAR_SALIDA: ticket.ESTADO === 'MAQUINA_ASIGNADA',
+	  FOTOS_SALIDA: []
         })
       });
 
