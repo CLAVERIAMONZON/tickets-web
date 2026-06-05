@@ -96,6 +96,7 @@ export default function PreTicketPage() {
 
       if (data.success) {
         const t = data.ticket;
+        alert('FOTOS_DRIVE: ' + t.FOTOS_DRIVE);
         setTicket(t);
 
         setFechaAlquiler(formatearFecha(t.FECHA_DE_ALQUILER) || '');
@@ -454,7 +455,31 @@ async function cancelarCarga() {
     </p>
   </div>
 )}
+{ticket.ESTADO === 'CARGADO' && ticket.FOTOS_DRIVE && (
+  <div className="rounded-2xl border border-gray-300 bg-white p-4">
+    <h3 className="mb-3 text-lg font-black text-gray-900">
+      Fotos de salida
+    </h3>
 
+    <div className="space-y-2">
+      {String(ticket.FOTOS_DRIVE)
+        .split('\n')
+        .map((url) => url.trim())
+        .filter((url) => url.startsWith('http'))
+        .map((url, index) => (
+          <a
+            key={index}
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block rounded-xl border border-gray-200 bg-gray-50 p-3 text-sm font-bold text-blue-700"
+          >
+            Ver foto {index + 1}
+          </a>
+        ))}
+    </div>
+  </div>
+)}
               {mensaje && (
                 <p className="text-center text-sm font-bold text-green-700">
                   {mensaje}
