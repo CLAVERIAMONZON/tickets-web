@@ -96,7 +96,10 @@ export default function PreTicketPage() {
 
       if (data.success) {
         const t = data.ticket;
-        alert('FOTOS_DRIVE: ' + t.FOTOS_DRIVE);
+        alert(
+  		'ESTADO=' + t.ESTADO +
+  		'\n\nFOTOS=' + t.FOTOS_DRIVE
+	);
         setTicket(t);
 
         setFechaAlquiler(formatearFecha(t.FECHA_DE_ALQUILER) || '');
