@@ -30,7 +30,41 @@ function tituloTicket(ticket) {
 
   return `${ticket.ID.replace('PT-', 'TC-')}`;
 }
+function comprimirFoto(file) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const reader = new FileReader();
 
+    reader.onload = () => {
+      img.src = reader.result;
+    };
+
+    img.onload = () => {
+      const maxAncho = 1600;
+      const escala = Math.min(1, maxAncho / img.width);
+
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(img.width * escala);
+      canvas.height = Math.round(img.height * escala);
+
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+      const base64 = canvas.toDataURL('image/jpeg', 0.7);
+
+      resolve({
+        nombre: file.name.replace(/\.[^/.]+$/, '') + '.jpg',
+        tipo: 'image/jpeg',const fotoBase64 = await new Promise((resolve) => {
+        contenido: base64.split(',')[1]
+      });
+    };
+
+    img.onerror = reject;
+    reader.onerror = reject;
+
+    reader.readAsDataURL(file);
+  });
+}
 export default function PreTicketPage() {
   const params = useParams();
   const id = params.id;
@@ -87,25 +121,18 @@ export default function PreTicketPage() {
   async function actualizarTicket() {
     setGuardando(true);
     setMensaje('');
+    if (ticket.ESTADO === 'CARGADO') {
+      setMensaje('Ticket finalizado');
+      setGuardando(false);
+      return;
+    }
 
     try {
 if (ticket.ESTADO === 'MAQUINA_ASIGNADA' && fotosSalida.length > 0) {
   for (let i = 0; i < fotosSalida.length; i++) {
     const foto = fotosSalida[i];
 
-    const fotoBase64 = await new Promise((resolve) => {
-      const reader = new FileReader();
-
-      reader.onload = () => {
-        resolve({
-          nombre: foto.name,
-          tipo: foto.type,
-          contenido: reader.result.split(',')[1]
-        });
-      };
-
-      reader.readAsDataURL(foto);
-    });
+    const fotoBase64 = await comprimirFoto(foto);
 
     setMensaje(`Subiendo foto ${i + 1} de ${fotosSalida.length}...`);
 
@@ -459,8 +486,7 @@ async function cancelarCarga() {
         : ticket.ESTADO === 'MAQUINA_ASIGNADA'
           ? 'CONFIRMAR SALIDA'
           : ticket.ESTADO === 'CARGADO'
-            ? 'GENERAR ALBARÁN'
-            : 'ACTUALIZAR TICKET'
+  	  ? 'FINALIZAR'
   }
 </button>
 
