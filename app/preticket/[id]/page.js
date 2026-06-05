@@ -53,9 +53,9 @@ function comprimirFoto(file) {
       const base64 = canvas.toDataURL('image/jpeg', 0.7);
 
       resolve({
-        nombre: file.name.replace(/\.[^/.]+$/, '') + '.jpg',
-        tipo: 'image/jpeg',const fotoBase64 = await new Promise((resolve) => {
-        contenido: base64.split(',')[1]
+  	nombre: file.name.replace(/\.[^/.]+$/, '') + '.jpg',
+  	tipo: 'image/jpeg',
+  	contenido: base64.split(',')[1]
       });
     };
 
@@ -199,14 +199,24 @@ if (!response.ok) {
 
 if (data.success) {
   setMensaje('Ticket actualizado correctamente');
+
+  const recarga = await fetch(`/api/ticket/${id}`);
+  const datosActualizados = await recarga.json();
+
+  if (datosActualizados.success) {
+    setTicket(datosActualizados.ticket);
+  }
+
 } else {
   setMensaje('Error: ' + (data.detalle || data.error || 'No identificado'));
 }
- setMensaje('Error de conexión: ' + err.message);
+    } catch (err) {
+      console.log(err);
+      setMensaje('Error de conexión: ' + err.message);
+    }
 
     setGuardando(false);
   }
-
 async function cancelarCarga() {
   setGuardando(true);
   setMensaje('');
