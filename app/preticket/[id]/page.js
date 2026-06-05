@@ -171,10 +171,7 @@ if (data.success) {
 } else {
   setMensaje('Error: ' + (data.detalle || data.error || 'No identificado'));
 }
-    } catch (err) {
-      console.log(err);
-      setMensaje('Error de conexión: ' + err.message);
-    }
+ setMensaje('Error de conexión: ' + err.message);
 
     setGuardando(false);
   }
